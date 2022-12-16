@@ -21,7 +21,7 @@ As for required libraries, these are here with the correct git command to paste 
 1. Ensure all libraries are installed.
 2. Using a text editor (please god not notepad) open bot.py. At the very top, you will see the following code to update. Nothing else needs to be changed, and the included comments should be pretty straight-forward:
 ```python
-===================================
+#===================================
 # EDIT BELOW VARIABLES TO SETUP BOT:
 
 TOKEN = 'DISCORD BOT TOKEN GOES HERE'
