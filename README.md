@@ -1,6 +1,11 @@
 # Discord-NOAA-image-Parser
 ## Welcome!
-This bot will detect poor image quality NOAA satellite passes and delete/move these images
+This bot will detect poor image quality NOAA satellite passes and delete/move these images.
+This bot was made to be used with raspberry-noaa-v2, found here: (https://github.com/jekhokie/raspberry-noaa-v2) but works fine too with manual sending
+
+(Note - occasionally if your threshold values are set incorrectly, there may be false flags.
+To mitigate any issues, there is Send_After_Detection = True which makes the bot send these images to another channel.
+This bot WILL NOT delete images from the original send location. I.E Rapberry Pi, Windows Desktop etc.
 
 ## Pre-requisites 
 The first step is to create a discord application, and then a discord bot. (https://discord.com/developers/applications)
