@@ -39,6 +39,10 @@ clear_threshold = 200
 # Default = 50
 static_threshold = 50
 
+# This will remove small resolution images
+MIN_WIDTH = 750
+MIN_HEIGHT = 500
+
 #===================================
 
 intents = discord.Intents.all()
@@ -48,9 +52,19 @@ bot = commands.Bot(command_prefix='!',intents=intents)
 client = discord.Client(intents=intents)
 
 def is_poor_quality_noaa_satellite_image(image):
+    print("PARSING...")
     # Convert the image to a NumPy array
     image_array = np.array(image)
+    
+    # get the resolution of image
+    width, height = image.size
 
+
+    #First check is resolution, if smaller than set minmums, considered poor quality.
+    if width > MIN_WIDTH or height < MIN_HEIGHT:
+        print("Image parsed - FAILED resolution test           image res values (W x H): ", width, ",", height)
+        print(" ")
+        return True
     # Check if the image is static by comparing the standard deviation of the pixel values
     # to a threshold value. If the standard deviation is below the threshold, the image is
     # considered static.
@@ -82,7 +96,7 @@ async def on_message(message):
             if message.attachments:
                 attachment = message.attachments[0]
                 # Check if the attachment is a PNG image
-                if attachment.filename.endswith('.jpg'):
+                if attachment.filename.endswith('.jpg') or attachment.filename.endswith('.png'):
                     # Download the image and open it using the Pillow library
                     image_data = requests.get(attachment.url).content
                     image = Image.open(BytesIO(image_data))
@@ -90,14 +104,12 @@ async def on_message(message):
                     # Check if the image is a poor quality NOAA satellite image
                     if is_poor_quality_noaa_satellite_image(image):
                         # Find the target channel where you want to copy the image
-                        if Send_After_Detection == True:
-                            print("Send_After_Detection set to True, sending to channel ID ", Send_Discord_Channel_ID)
-                            target_channel = client.get_channel(Send_Discord_Channel_ID)
-                        
-                            # Send the image to the target channel
-                            await target_channel.send(file=discord.File(BytesIO(image_data), filename=attachment.filename))
-                        else: print("Send_After_Detection set to False, Outright deleting image")
-                            
+                        target_channel_id = Send_Discord_Channel_ID  # Replace with the actual channel ID
+                        target_channel = client.get_channel(target_channel_id)
+
+                        # Send the image to the target channel
+                        await target_channel.send(file=discord.File(BytesIO(image_data), filename=attachment.filename))
+
                         # Delete the original message from the source channel
                         await message.delete()
 
