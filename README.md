@@ -53,6 +53,10 @@ clear_threshold = 200
 # Default = 50
 static_threshold = 50
 
+# This will remove small resolution images
+MIN_WIDTH = 750
+MIN_HEIGHT = 500
+
 #===================================
 
 ```
